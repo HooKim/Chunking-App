@@ -1,17 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import App from './components/App';
+import Practice from './components/Practice';
+import PracticeOn from './components/PracticeOn';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+class RootApp extends React.Component{ 
+    constructor(props){
+        super(props);
+        this.state  = {text:"" , size:1, time: 99999 };
+        this.setValues = this.setValues.bind(this);
+    }
+    setValues(text = "", size, time){
+        this.setState((prevState) => ({
+            text : text == "" ? prevState.text : text,
+            size : isNaN(size) ? prevState.size : size,
+            time : isNaN(time) ? prevState.time : time
+        })
+        )
+    }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+    render(){
+    return(
+    <BrowserRouter>
+        <Routes>
+            <Route path = "/"  element = {<App />} />
+            <Route path = "/practice" element = {<Practice 
+                                                    setValues = {this.setValues}
+                                                    state ={this.state} 
+                                                    />}
+                                                />
+            <Route path = "/practice/on-going" element ={<PracticeOn 
+                                                    state = {this.state}/>} 
+                                                />
+            <Route path = "/test" element = {<Practice />} />
+        </Routes>
+    </BrowserRouter>
+    )};
+}
+
+
+
+ReactDOM.render(<RootApp />, document.getElementById('root')); 
+
